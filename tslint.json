@@ -1,0 +1,49 @@
+{
+  "extends": "tslint:recommended",
+  "linterOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "no-empty": false,
+    "ordered-imports": [
+      false
+    ],
+    "no-var-requires": true,
+    "no-trailing-whitespace": true,
+    "quotemark": false,
+    "indent": [
+      true,
+      "spaces",
+      2
+    ],
+    "max-line-length": [
+      true,
+      {
+        "limit": 120,
+        "ignore-pattern": "^import |^export {(.*?)}"
+      }
+    ],
+    "prefer-const": true,
+    "semicolon": [
+      true,
+      "always"
+    ],
+    "trailing-comma": [
+      true
+    ],
+    "only-arrow-functions": false,
+    "import-spacing": true,
+    "no-debugger": true,
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-separator",
+      "check-type"
+    ],
+    "object-literal-sort-keys": false,
+    "no-angle-bracket-type-assertion": false,
+    "interface-name": false
+  }
+}

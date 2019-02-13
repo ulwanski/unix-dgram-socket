@@ -1,0 +1,37 @@
+{
+  "name": "unix-dgram-socket",
+  "version": "1.0.0",
+  "description": "Use abstract unix socket to provide turbo-fast and easy communication between Node.JS process.",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -Rf ./dist ./coverage",
+    "clean:all": "npm run clean && rm -Rf ./node_modules ./build",
+    "build": "npm run lint:fix && npm run clean && ./node_modules/typescript/bin/tsc --build --pretty ./tsconfig.json",
+    "lint": "./node_modules/tslint/bin/tslint --format stylish --project tsconfig.json",
+    "lint:code": "./node_modules/tslint/bin/tslint --format codeFrame --project tsconfig.json",
+    "lint:fix": "./node_modules/tslint/bin/tslint --format stylish --project tsconfig.json --fix",
+    "test": "npm run test:unit && test:report",
+    "test:functional": "./node_modules/.bin/_mocha -r ts-node/register test/functional/**/*.test.ts",
+    "test:report": "./node_modules/.bin/nyc report --reporter=text --temp-dir=./coverage/.nyc_output",
+    "test:audit": "npm audit"
+  },
+  "keywords": [
+    "ipc",
+    "unix",
+    "socket",
+    "dgram",
+    "abstract"
+  ],
+  "author": "Marek Ulwański <marek@ulwanski.pl>",
+  "license": "ISC",
+  "dependencies": {
+    "nan": "^2.12.1",
+    "nanoid": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/nanoid": "^1.2.0",
+    "@types/node": "^11.9.3",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
+  }
+}
