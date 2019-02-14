@@ -12,8 +12,8 @@ socket.on('writable', () => {
     console.log('writable');
 });
 
-socket.on('message', (message: any, info: any) => {
-    console.log(message);
+socket.on('message', (message: Buffer, info: any) => {
+    console.log(message.toString(UnixDgramSocket.payloadEncoding));
     console.log(info);
 });
 
@@ -29,4 +29,4 @@ socket.on('congestion', (buf: any) => {
     console.log('congestion: ', buf);
 });
 
-socket.bind("/tmp/socket_test1.sock");
+socket.bind("\0/tmp/socket_test1.sock");
