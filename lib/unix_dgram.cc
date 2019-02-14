@@ -7,13 +7,10 @@
 #include <stddef.h>
 #include <unistd.h>
 #include <fcntl.h>
-
 #include <sys/types.h>
 #include <sys/stat.h>
-
 #include <sys/socket.h>
 #include <sys/un.h>
-
 #include <map>
 
 #define offset_of(type, member)                                               \
@@ -47,7 +44,6 @@ struct SocketContext {
 typedef std::map<int, SocketContext*> watchers_t;
 
 watchers_t watchers;
-
 
 inline void SetNonBlock(int fd) {
   int flags;
@@ -91,7 +87,9 @@ void OnRecv(SocketContext* sc) {
   iov.iov_base = scratch;
   iov.iov_len = sizeof scratch;
 
+  // If first byte is zero, it could be abstract socket namespace path, so second byte must be check
   u_addr.s.sun_path[0] = '\0';
+  u_addr.s.sun_path[1] = '\0';
 
   memset(&msg, 0, sizeof msg);
   msg.msg_iovlen = 1;
@@ -107,9 +105,10 @@ void OnRecv(SocketContext* sc) {
     err = -errno;
   } else {
     argv[1] = Nan::CopyBuffer(scratch, err).ToLocalChecked();
-    if (u_addr.s.sun_path[0] != '\0') {
-      argv[2] = Nan::New<String>(u_addr.s.sun_path).ToLocalChecked();
+    if (u_addr.s.sun_path[0] == '\0' && u_addr.s.sun_path[1] != '\0') {
+      u_addr.s.sun_path[0] = '@';
     }
+    argv[2] = Nan::New<String>(u_addr.s.sun_path).ToLocalChecked();
   }
 
   argv[0] = Nan::New<Integer>(static_cast<int32_t>(err));
@@ -231,6 +230,9 @@ NAN_METHOD(Bind) {
   memcpy(s.sun_path, *path, len);
   s.sun_family = AF_UNIX;
 
+  // Replace @ for unix socket abstract namespace char '\0'
+  if (s.sun_path[0] == '@') s.sun_path[0] = '\0';
+
   namelen = offsetof(struct sockaddr_un, sun_path) + len;
 
   err = 0;
@@ -278,6 +280,9 @@ NAN_METHOD(SendTo) {
   memset(&s, 0, sizeof(s));
   memcpy(s.sun_path, *path, len);
   s.sun_family = AF_UNIX;
+
+  // Replace @ for unix socket abstract namespace char '\0'
+  if (s.sun_path[0] == '@') s.sun_path[0] = '\0';
 
   namelen = offsetof(struct sockaddr_un, sun_path) + len;
 
@@ -353,11 +358,6 @@ NAN_METHOD(Connect) {
   fd = info[0]->Int32Value();
   String::Utf8Value path(info[1]);
 
-  if ((*path)[0] != '\0') {
-      err = -EINVAL;
-      goto out;
-  }
-
   len = path.length();
   if (len > sizeof(s.sun_path)) {
       err = -EINVAL;
@@ -367,6 +367,10 @@ NAN_METHOD(Connect) {
   memset(&s, 0, sizeof(s));
   memcpy(s.sun_path, *path, len);
   s.sun_family = AF_UNIX;
+
+  // Replace @ for unix socket abstract namespace char '\0'
+  if (s.sun_path[0] == '@') s.sun_path[0] = '\0';
+
   namelen = offsetof(struct sockaddr_un, sun_path) + len;
 
   err = 0;
