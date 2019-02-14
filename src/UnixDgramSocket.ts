@@ -1,40 +1,39 @@
+/* tslint:disable:no-var-requires */
 import * as fs from "fs";
 import {EventEmitter} from "events";
-import {errors} from "./UnixSocketErrors";
-
-/* tslint:disable:no-var-requires */
+import {SocketException} from "./SocketException";
 const lib = require('../build/Release/unix_dgram');
 
 export class UnixDgramSocket extends EventEmitter {
     public static readonly payloadEncoding = 'utf8';
     protected fd: any;
-    protected connected: any;
+    protected connected: boolean = false;
 
     public constructor() {
         super();
 
-        this.fd = lib.socket(lib.AF_UNIX, lib.SOCK_DGRAM, 0, (size: number, data: Buffer, sockPath: string | null) => {
-            this.emit('message', data.toString(UnixDgramSocket.payloadEncoding), { size, path: sockPath });
+        this.fd = lib.socket(lib.AF_UNIX, lib.SOCK_DGRAM, 0, (size: number, data: Buffer, path: string | null) => {
+            this.emit('message', data, { dataSize: size, remoteSocket: path });
         }, () => {
             this.emit('writable');
         });
 
         if (this.fd < 0) {
-            throw new this.errnoException(this.fd, 'socket');
+            throw new SocketException(this.fd, 'socket');
         }
     }
 
     public bind(socketPath: string): void {
-        const err: any = lib.bind(this.fd, this.cleanupSocketFile(socketPath));
-        if (err < 0) {
-            this.emit('error', this.errnoException(err, 'bind'));
+        const result: number = lib.bind(this.fd, this.cleanupSocketFile(socketPath));
+        if (result < 0) {
+            this.emit('error', new SocketException(result, 'bind'));
         } else {
             this.emit('listening', socketPath);
         }
     }
 
     public send(data: Buffer | string, socketPath?: string): void {
-        let result: any;
+        let result: number;
 
         if (typeof data === 'string') {
             data = Buffer.from(data, UnixDgramSocket.payloadEncoding);
@@ -43,24 +42,20 @@ export class UnixDgramSocket extends EventEmitter {
         if (socketPath) {
             result = lib.sendto(this.fd, data, 0, data.length, socketPath);
         } else {
-            if (!this.connected) {
-                this.emit('error', new Error('Socket is not connected'));
-                return;
-            }
             result = lib.send(this.fd, data);
         }
 
         if (result < 0) {
-            this.emit('error', this.errnoException(result, 'send'));
+            this.emit('error', new SocketException(result, 'send'));
         } else if (result === 1) {
             this.emit('congestion', data);
         }
     }
 
     public close() {
-        const err: any = lib.close(this.fd);
-        if (err < 0) {
-            throw new this.errnoException(err, 'close');
+        const result: number = lib.close(this.fd);
+        if (result < 0) {
+            this.emit('error', new SocketException(result, 'close'));
         }
         this.fd = -1;
     }
@@ -81,23 +76,13 @@ export class UnixDgramSocket extends EventEmitter {
      since kernel 2.2).
      */
     public connect(socketPath: string) {
-        const err: any = lib.connect(this.fd, socketPath);
-        if (err < 0) {
-            this.emit('error', this.errnoException(err, 'connect'));
+        const result: number = lib.connect(this.fd, socketPath);
+        if (result < 0) {
+            this.emit('error', new SocketException(result, 'connect'));
         } else {
             this.connected = true;
             this.emit('connect', socketPath);
         }
-    }
-
-    protected errnoException(errorNo: number, syscall: string): void {
-        errorNo = Math.abs(errorNo);
-        const error: any = new Error(`${syscall}: ${errors[errorNo].desc}`);
-        error.code = errors[errorNo].code;
-        error.errno = errorNo;
-        error.syscall = syscall;
-
-        return error;
     }
 
     protected cleanupSocketFile(socketPath: string): string {
