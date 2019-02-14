@@ -1,16 +1,26 @@
 {
   "compilerOptions": {
-    "lib": ["es2018", "dom"],
     "moduleResolution": "node",
-    "target": "es5",
-    "module": "commonjs",
+    "target": "ES5",
+    "module": "CommonJS",
+    "declaration": true,
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": ".",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "strict": false
+    "newLine": "lf",
+    "experimentalDecorators": false,
+    "emitDecoratorMetadata": false,
+    "alwaysStrict": true,
+    "removeComments": true,
+    "importHelpers": true
   },
-  "exclude": ["node_modules", "test"],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "test",
+    "src/**/example*"
+  ],
   "compileOnSave": true
 }
