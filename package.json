@@ -15,7 +15,7 @@
   "homepage": "https://github.com/ulwanski/unix-dgram-socket",
   "license": "GPL-3.0",
   "author": "Marek Ulwański <marek@ulwanski.pl>",
-  "main": "dist/UnixDatagramSocket.js",
+  "main": "lib/UnixDatagramSocket.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:ulwanski/unix-dgram-socket.git"
@@ -24,16 +24,16 @@
     "linux"
   ],
   "scripts": {
+    "publish": "npm publish ./dist --access public",
     "clean": "rm -Rf ./dist ./build ./coverage",
     "clean:all": "npm run clean && rm -Rf ./node_modules",
     "compile": "node-gyp rebuild",
     "transcompile": "./node_modules/typescript/bin/tsc --build --pretty ./tsconfig.json",
-    "build": "npm run lint:fix && npm run clean && npm run compile && npm run transcompile && npm run package:prepare",
+    "build": "npm run lint:fix && npm run clean && npm run transcompile && npm run package:prepare",
     "lint": "./node_modules/tslint/bin/tslint --format stylish --project tsconfig.json",
     "lint:code": "./node_modules/tslint/bin/tslint --format codeFrame --project tsconfig.json",
     "lint:fix": "./node_modules/tslint/bin/tslint --format stylish --project tsconfig.json --fix",
-    "package:prepare": "cp *.md LICENSE package.json *.gyp ./dist",
-    "package:publish": "npm publish ./dist --access public",
+    "package:prepare": "cp -R *.md LICENSE package.json *.gyp ./dist && mkdir -p ./dist/src && cp src/*.cc ./dist/src",
     "test": "npm run test:unit && test:report",
     "test:functional": "./node_modules/.bin/_mocha -r ts-node/register test/functional/**/*.test.ts",
     "test:report": "./node_modules/.bin/nyc report --reporter=text --temp-dir=./coverage/.nyc_output",
