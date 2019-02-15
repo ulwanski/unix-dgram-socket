@@ -1,6 +1,6 @@
 {
   "name": "unix-dgram-socket",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "Datagram unix socket implementation with abstract namespace support for local interprocess communication.",
   "keywords": [
     "dgram",
@@ -15,7 +15,7 @@
   "homepage": "https://github.com/ulwanski/unix-dgram-socket",
   "license": "GPL-3.0",
   "author": "Marek Ulwański <marek@ulwanski.pl>",
-  "main": "lib/UnixDatagramSocket.js",
+  "main": "lib/UnixDgramSocket.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:ulwanski/unix-dgram-socket.git"
@@ -24,7 +24,6 @@
     "linux"
   ],
   "scripts": {
-    "publish": "npm publish ./dist --access public",
     "clean": "rm -Rf ./dist ./build ./coverage",
     "clean:all": "npm run clean && rm -Rf ./node_modules",
     "compile": "node-gyp rebuild",
