@@ -1,21 +1,25 @@
 {
   "name": "unix-dgram-socket",
   "version": "1.0.4",
-  "description": "Datagram unix socket implementation with abstract namespace support for local interprocess communication.",
+  "description": "Unix datagram socket with abstract namespace support for local interprocess communication.",
   "keywords": [
-    "dgram",
     "ipc",
     "unix",
+    "sock",
+    "event",
+    "dgram",
     "socket",
+    "threads",
+    "messages",
     "abstract",
-    "namespace",
     "unixsocket",
-    "sock"
+    "child_process"
   ],
   "homepage": "https://github.com/ulwanski/unix-dgram-socket",
   "license": "GPL-3.0",
   "author": "Marek Ulwański <marek@ulwanski.pl>",
   "main": "lib/UnixDgramSocket.js",
+  "types": "lib/UnixDgramSocket.d.ts",
   "repository": {
     "type": "git",
     "url": "git@github.com:ulwanski/unix-dgram-socket.git"
@@ -32,17 +36,22 @@
     "lint": "./node_modules/tslint/bin/tslint --format stylish --project tsconfig.json",
     "lint:code": "./node_modules/tslint/bin/tslint --format codeFrame --project tsconfig.json",
     "lint:fix": "./node_modules/tslint/bin/tslint --format stylish --project tsconfig.json --fix",
-    "package:prepare": "cp -R *.md LICENSE package.json *.gyp ./dist && mkdir -p ./dist/src && cp src/*.cc ./dist/src",
+    "package:prepare": "cp -R *.md LICENSE ChangeLog .npmignore .gitignore .eslintrc.js package.json *.gyp ./dist && mkdir -p ./dist/src && cp src/*.cc ./dist/src",
     "test": "npm run test:unit && test:report",
     "test:functional": "./node_modules/.bin/_mocha -r ts-node/register test/functional/**/*.test.ts",
     "test:report": "./node_modules/.bin/nyc report --reporter=text --temp-dir=./coverage/.nyc_output",
     "test:audit": "npm audit"
+  },
+  "engines" : {
+    "node" : ">=0.11.14"
   },
   "dependencies": {
     "nan": "^2.12.1"
   },
   "devDependencies": {
     "@types/node": "^11.9.3",
+    "eslint": "^5.14.0",
+    "eslint-plugin-security": "^1.4.0",
     "tslint": "^5.12.1",
     "typescript": "^3.3.3"
   }

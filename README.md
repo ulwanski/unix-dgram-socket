@@ -1,10 +1,11 @@
-# unix-dgram-socket
+# unix-dgram-socket ![](https://img.shields.io/npm/v/unix-dgram-socket.svg?style=flat-square) ![](https://img.shields.io/node/v/unix-dgram-socket.svg?style=flat-square)
 ![](https://img.shields.io/github/issues-raw/ulwanski/unix-dgram-socket.svg?style=flat)
+![](https://img.shields.io/snyk/vulnerabilities/npm/unix-dgram-socket.svg?style=flat-square)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d3c2d8318a5f4a91b092bad74a2173fc)](https://www.codacy.com/app/ulwanski/unix-dgram-socket?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ulwanski/unix-dgram-socket&amp;utm_campaign=Badge_Grade)
 [![Maintainability](https://api.codeclimate.com/v1/badges/dbc4719bb948227082c5/maintainability)](https://codeclimate.com/github/ulwanski/unix-dgram-socket/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/dbc4719bb948227082c5/test_coverage)](https://codeclimate.com/github/ulwanski/unix-dgram-socket/test_coverage)
 
-Connection-less, reliable unix socket implementation with abstract namespace support for local interprocess communication in Node.JS application.
+Connection-less, reliable unix datagram socket implementation with abstract namespace support for local interprocess communication in Node.JS application.
 UNIX domain sockets can be either unnamed, or bound to a filesystem pathname (marked as being of type socket).
 Linux also supports an abstract namespace which is independent of the filesystem.
 
