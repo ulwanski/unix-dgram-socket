@@ -1,6 +1,6 @@
 {
   "name": "unix-dgram-socket",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Unix datagram socket with abstract namespace support for local interprocess communication.",
   "keywords": [
     "ipc",
