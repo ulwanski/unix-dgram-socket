@@ -11,7 +11,7 @@ export class SocketException extends Error {
         super((errors[errorNumber]) ? errors[errorNumber].desc : 'Unknown error');
 
         this.name = 'Socket error';
-        this.code = errors[errorNumber].code;
+        this.code = (errors[errorNumber]) ? errors[errorNumber].code : undefined;
         this.errorNumber = errorNumber;
         this.syscall = syscall;
     }

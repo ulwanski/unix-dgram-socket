@@ -37,22 +37,52 @@
     "lint:code": "./node_modules/tslint/bin/tslint --format codeFrame --project tsconfig.json",
     "lint:fix": "./node_modules/tslint/bin/tslint --format stylish --project tsconfig.json --fix",
     "package:prepare": "cp -R *.md LICENSE ChangeLog .npmignore .gitignore .eslintrc.js package.json *.gyp ./dist && mkdir -p ./dist/src && cp src/*.cc ./dist/src",
-    "test": "npm run test:unit && test:report",
-    "test:functional": "./node_modules/.bin/_mocha -r ts-node/register test/functional/**/*.test.ts",
-    "test:report": "./node_modules/.bin/nyc report --reporter=text --temp-dir=./coverage/.nyc_output",
+    "test": "./node_modules/.bin/nyc --clean --temp-dir=./coverage/.nyc_output ./node_modules/.bin/_mocha -r ts-node/register test/**/*.test.ts",
     "test:audit": "npm audit"
   },
-  "engines" : {
-    "node" : ">=0.11.14"
+  "engines": {
+    "node": ">=0.11.14"
   },
   "dependencies": {
     "nan": "^2.12.1"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/expect": "^1.20.4",
+    "@types/mocha": "^5.2.6",
     "@types/node": "^11.9.3",
+    "@types/rewire": "^2.5.28",
+    "@types/sinon": "^7.0.6",
+    "chai": "^4.2.0",
     "eslint": "^5.14.0",
     "eslint-plugin-security": "^1.4.0",
+    "expect": "^24.1.0",
+    "mocha": "^6.0.1",
+    "node-gyp": "^3.8.0",
+    "nyc": "^13.3.0",
+    "rewire": "^4.0.1",
+    "sinon": "^7.2.4",
+    "ts-jest": "^24.0.0",
+    "ts-node": "^8.0.2",
     "tslint": "^5.12.1",
     "typescript": "^3.3.3"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "src/example*.ts"
+    ],
+    "include": [
+      "src/**"
+    ],
+    "reporter": [
+      "html",
+      "text-summary"
+    ],
+    "all": true
   }
 }
