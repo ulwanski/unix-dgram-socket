@@ -159,6 +159,86 @@ describe("UnixDgramSocket method", () => {
         expect(socketLib.send.calledOnce).toBeTruthy();
         expect(socketLib.sendto.calledOnce).toBeFalsy();
     });
+
+    it('connect should throw exception when socket.connect return error', () => {
+        const RewiredUnixDgramSocket = rewire("../src/UnixDgramSocket");
+        const socketLib = {
+            socket: () => 1,
+            connect: () => -1,
+        };
+
+        RewiredUnixDgramSocket.__set__('lib', socketLib);
+        const SocketComponent: typeof UnixDgramSocket & typeof RewiredUnixDgramSocket = <any> RewiredUnixDgramSocket;
+        const socket = new SocketComponent.UnixDgramSocket();
+
+        expect(() => {
+            socket.connect('/tmp/foo/socket.sock');
+        }).toThrow();
+    });
+
+    it('close should throw exception when socket.close return error', () => {
+        const RewiredUnixDgramSocket = rewire("../src/UnixDgramSocket");
+        const socketLib = {
+            socket: () => 1,
+            close: () => -1,
+        };
+
+        RewiredUnixDgramSocket.__set__('lib', socketLib);
+        const SocketComponent: typeof UnixDgramSocket & typeof RewiredUnixDgramSocket = <any> RewiredUnixDgramSocket;
+        const socket = new SocketComponent.UnixDgramSocket();
+
+        expect(() => {
+            socket.close();
+        }).toThrow();
+    });
+
+    it('send should throw exception when socket.send return error', () => {
+        const RewiredUnixDgramSocket = rewire("../src/UnixDgramSocket");
+        const socketLib = {
+            socket: () => 1,
+            send: () => -1,
+        };
+
+        RewiredUnixDgramSocket.__set__('lib', socketLib);
+        const SocketComponent: typeof UnixDgramSocket & typeof RewiredUnixDgramSocket = <any> RewiredUnixDgramSocket;
+        const socket = new SocketComponent.UnixDgramSocket();
+
+        expect(() => {
+            socket.send("example-data");
+        }).toThrow();
+    });
+
+    it('send should throw exception when socket.sendto return error', () => {
+        const RewiredUnixDgramSocket = rewire("../src/UnixDgramSocket");
+        const socketLib = {
+            socket: () => 1,
+            sendto: () => -1,
+        };
+
+        RewiredUnixDgramSocket.__set__('lib', socketLib);
+        const SocketComponent: typeof UnixDgramSocket & typeof RewiredUnixDgramSocket = <any> RewiredUnixDgramSocket;
+        const socket = new SocketComponent.UnixDgramSocket();
+
+        expect(() => {
+            socket.send("example-data", '/tmp/foo/socket.sock');
+        }).toThrow();
+    });
+
+    it('bind should throw exception when socket.bind return error', () => {
+        const RewiredUnixDgramSocket = rewire("../src/UnixDgramSocket");
+        const socketLib = {
+            socket: () => 1,
+            bind: () => -1,
+        };
+
+        RewiredUnixDgramSocket.__set__('lib', socketLib);
+        const SocketComponent: typeof UnixDgramSocket & typeof RewiredUnixDgramSocket = <any> RewiredUnixDgramSocket;
+        const socket = new SocketComponent.UnixDgramSocket();
+
+        expect(() => {
+            socket.bind('/tmp/foo/socket.sock');
+        }).toThrow();
+    });
 });
 
 describe("UnixDgramSocket method cleanupSocketFile", () => {
