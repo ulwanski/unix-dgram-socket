@@ -185,7 +185,7 @@ NAN_METHOD(Socket) {
   recv_cb     = info[3];
   writable_cb = info[4];
 
-  type |= SOCK_NONBLOCK | SOCK_CLOEXEC;
+  // type |= SOCK_NONBLOCK | SOCK_CLOEXEC;
 
   fd = socket(domain, type, protocol);
   if (fd == -1) {
