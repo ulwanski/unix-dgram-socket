@@ -24,9 +24,6 @@
     "type": "git",
     "url": "git@github.com:ulwanski/unix-dgram-socket.git"
   },
-  "os": [
-    "linux"
-  ],
   "scripts": {
     "clean": "rm -Rf ./dist ./build ./coverage",
     "clean:all": "npm run clean && rm -Rf ./node_modules",
