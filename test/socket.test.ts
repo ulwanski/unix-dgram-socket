@@ -16,7 +16,7 @@ describe("UnixDgramSocket constructor", () => {
         RewiredUnixDgramSocket.__set__('lib', socketLib);
         const SocketComponent: typeof UnixDgramSocket & typeof RewiredUnixDgramSocket = <any> RewiredUnixDgramSocket;
 
-        const socket = new SocketComponent.UnixDgramSocket();
+        new SocketComponent.UnixDgramSocket();
         expect(socketLib.socket.calledOnce).toBeTruthy();
     });
 
@@ -30,7 +30,7 @@ describe("UnixDgramSocket constructor", () => {
         const SocketComponent: typeof UnixDgramSocket & typeof RewiredUnixDgramSocket = <any> RewiredUnixDgramSocket;
 
         expect(() => {
-            const socket = new SocketComponent.UnixDgramSocket();
+            new SocketComponent.UnixDgramSocket();
         }).toThrow();
     });
 
@@ -44,7 +44,7 @@ describe("UnixDgramSocket constructor", () => {
         const SocketComponent: typeof UnixDgramSocket & typeof RewiredUnixDgramSocket = <any> RewiredUnixDgramSocket;
 
         expect(() => {
-            const socket = new SocketComponent.UnixDgramSocket();
+            new SocketComponent.UnixDgramSocket();
         }).toThrow('Unknown error');
     });
 
@@ -58,7 +58,7 @@ describe("UnixDgramSocket constructor", () => {
         const SocketComponent: typeof UnixDgramSocket & typeof RewiredUnixDgramSocket = <any> RewiredUnixDgramSocket;
 
         expect(() => {
-            const socket = new SocketComponent.UnixDgramSocket();
+            new SocketComponent.UnixDgramSocket();
         }).toThrow('Permission denied');
     });
 });

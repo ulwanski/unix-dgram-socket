@@ -29,7 +29,7 @@
     "clean:all": "npm run clean && rm -Rf ./node_modules",
     "compile": "node-gyp rebuild",
     "transcompile": "./node_modules/typescript/bin/tsc --build --pretty ./tsconfig.json",
-    "build": "npm run lint:fix && npm run clean && npm run transcompile && npm run package:prepare",
+    "build": "npm run lint:fix && npm run clean && npm run compile && npm run transcompile && npm run package:prepare",
     "lint": "./node_modules/tslint/bin/tslint --format stylish --project tsconfig.json",
     "lint:code": "./node_modules/tslint/bin/tslint --format codeFrame --project tsconfig.json",
     "lint:fix": "./node_modules/tslint/bin/tslint --format stylish --project tsconfig.json --fix",
@@ -41,7 +41,7 @@
     "node": ">=0.11.14"
   },
   "dependencies": {
-    "nan": "^2.12.1"
+    "nan": "^2.13.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
