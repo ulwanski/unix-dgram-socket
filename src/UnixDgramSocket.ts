@@ -54,7 +54,7 @@ export class UnixDgramSocket extends EventEmitter {
         return (result >= 0);
     }
 
-    public close() {
+    public close(): void {
         const result: number = lib.close(this.fd);
         if (result < 0) {
             this.emit('error', new SocketException(result, 'close'));
