@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.10] - 2019-03-23
+- Strict mode enabled
+- tslib dependency and helper removed
+
+## [1.0.9] - 2019-03-17
+### Changed
+- Send method is now return boolean value
+
 ## [1.0.7] - 2019-03-3
 ### Fix
 - Constant bug on node 11.x

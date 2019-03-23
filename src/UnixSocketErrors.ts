@@ -1,4 +1,4 @@
-export const errors = {
+export const errors: {[key: number]: {code: string; desc: string}} = {
     1: {code: 'EPERM', desc: 'Operation not permitted'},
     2: {code: 'ENOENT', desc: 'No such file or directory'},
     3: {code: 'ESRCH', desc: 'No such process'},

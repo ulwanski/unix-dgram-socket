@@ -2,8 +2,8 @@ import {errors} from "./UnixSocketErrors";
 
 export class SocketException extends Error {
 
-    protected code: string;
-    protected syscall: string;
+    protected code?: string;
+    protected syscall?: string;
     protected errorNumber: number;
 
     public constructor(errorNumber: number, syscall?: string) {

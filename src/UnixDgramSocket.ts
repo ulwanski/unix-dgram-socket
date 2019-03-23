@@ -32,7 +32,7 @@ export class UnixDgramSocket extends EventEmitter {
         }
     }
 
-    public send(data: Buffer | string, socketPath?: string): void {
+    public send(data: Buffer | string, socketPath?: string): boolean {
         let result: number;
 
         if (typeof data === 'string') {
@@ -50,6 +50,8 @@ export class UnixDgramSocket extends EventEmitter {
         } else if (result === 1) {
             this.emit('congestion', data);
         }
+
+        return (result >= 0);
     }
 
     public close() {
