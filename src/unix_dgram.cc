@@ -35,8 +35,8 @@ using v8::String;
 using v8::Value;
 
 struct SocketContext {
-  Nan::Persistent<Function> recv_cb_;
-  Nan::Persistent<Function> writable_cb_;
+  Nan::Callback recv_cb_;
+  Nan::Callback writable_cb_;
   uv_poll_t handle_;
   int fd_;
 };
@@ -113,13 +113,13 @@ void OnRecv(SocketContext* sc) {
 
   argv[0] = Nan::New<Integer>(static_cast<int32_t>(err));
 
-  Nan::MakeCallback(Nan::GetCurrentContext()->Global(), Nan::New(sc->recv_cb_), sizeof(argv) / sizeof(argv[0]), argv);
+  Nan::Call(sc->recv_cb_, sizeof(argv) / sizeof(argv[0]), argv);
 }
 
 void OnWritable(SocketContext* sc) {
   Nan::HandleScope scope;
   uv_poll_start(&sc->handle_, UV_READABLE, OnEvent);
-  Nan::MakeCallback(Nan::GetCurrentContext()->Global(), Nan::New(sc->writable_cb_), 0, NULL);
+  Nan::Call(sc->writable_cb_, 0, NULL);
 }
 
 void OnEvent(uv_poll_t* handle, int status, int events) {
@@ -179,9 +179,9 @@ NAN_METHOD(Socket) {
 
   assert(info.Length() == 5);
 
-  domain      = info[0]->Int32Value(Nan::GetCurrentContext()).FromJust();
-  type        = info[1]->Int32Value(Nan::GetCurrentContext()).FromJust();
-  protocol    = info[2]->Int32Value(Nan::GetCurrentContext()).FromJust();
+  domain      = Nan::To<int32_t>(info[0]).FromJust();
+  type        = Nan::To<int32_t>(info[1]).FromJust();
+  protocol    = Nan::To<int32_t>(info[2]).FromJust();
   recv_cb     = info[3];
   writable_cb = info[4];
 
@@ -210,37 +210,25 @@ out:
 NAN_METHOD(Bind) {
   Nan::HandleScope scope;
   sockaddr_un s;
-  socklen_t namelen;
   int err;
   int fd;
-  unsigned int len;
-  auto isolate = info.GetIsolate();
 
   assert(info.Length() == 2);
 
-  fd = info[0]->Int32Value(Nan::GetCurrentContext()).FromJust();
-  String::Utf8Value path(isolate, info[1]);
-
-  len = path.length();
-  if (len > sizeof(s.sun_path)) {
-      err = -EINVAL;
-      goto out;
-  }
+  fd = Nan::To<int32_t>(info[0]).FromJust();
+  Nan::Utf8String path(info[1]);
 
   memset(&s, 0, sizeof(s));
-  memcpy(s.sun_path, *path, len);
+  strncpy(s.sun_path, *path, sizeof(s.sun_path) - 1);
   s.sun_family = AF_UNIX;
 
   // Replace @ for unix socket abstract namespace char '\0'
   if (s.sun_path[0] == '@') s.sun_path[0] = '\0';
 
-  namelen = offsetof(struct sockaddr_un, sun_path) + len;
-
   err = 0;
-  if (bind(fd, reinterpret_cast<sockaddr*>(&s), namelen))
+  if (bind(fd, reinterpret_cast<sockaddr*>(&s), sizeof(s)))
     err = -errno;
 
-out:
   info.GetReturnValue().Set(err);
 }
 
@@ -252,21 +240,17 @@ NAN_METHOD(SendTo) {
   size_t length;
   msghdr msg;
   iovec iov;
-  socklen_t namelen;
   int err;
   int fd;
   int r;
-  unsigned int len;
-  auto isolate = info.GetIsolate();
-  Local<Context> context = isolate->GetCurrentContext();
 
   assert(info.Length() == 5);
 
-  fd = info[0]->Int32Value(Nan::GetCurrentContext()).FromJust();
-  buf = info[1]->ToObject(context).ToLocalChecked();
-  offset = info[2]->Int32Value(Nan::GetCurrentContext()).FromJust();
-  length = info[3]->Int32Value(Nan::GetCurrentContext()).FromJust();
-  String::Utf8Value path(isolate, info[4]);
+  fd = Nan::To<int32_t>(info[0]).FromJust();
+  buf = Nan::To<Object>(info[1]).ToLocalChecked();
+  offset = Nan::To<uint32_t>(info[2]).FromJust();
+  length = Nan::To<uint32_t>(info[3]).FromJust();
+  Nan::Utf8String path(info[4]);
 
   assert(node::Buffer::HasInstance(buf));
   assert(offset + length <= node::Buffer::Length(buf));
@@ -274,26 +258,18 @@ NAN_METHOD(SendTo) {
   iov.iov_base = node::Buffer::Data(buf) + offset;
   iov.iov_len = length;
 
-  len = path.length();
-  if (len > sizeof(s.sun_path)) {
-      err = -EINVAL;
-      goto out;
-  }
-
   memset(&s, 0, sizeof(s));
-  memcpy(s.sun_path, *path, len);
+  strncpy(s.sun_path, *path, sizeof(s.sun_path) - 1);
   s.sun_family = AF_UNIX;
 
   // Replace @ for unix socket abstract namespace char '\0'
   if (s.sun_path[0] == '@') s.sun_path[0] = '\0';
 
-  namelen = offsetof(struct sockaddr_un, sun_path) + len;
-
   memset(&msg, 0, sizeof msg);
   msg.msg_iovlen = 1;
   msg.msg_iov = &iov;
   msg.msg_name = reinterpret_cast<void*>(&s);
-  msg.msg_namelen = namelen;
+  msg.msg_namelen = sizeof(s);
 
   do
     r = sendmsg(fd, &msg, 0);
@@ -303,7 +279,6 @@ NAN_METHOD(SendTo) {
   if (r == -1)
     err = -errno;
 
-out:
   info.GetReturnValue().Set(err);
 }
 
@@ -315,13 +290,11 @@ NAN_METHOD(Send) {
   int err;
   int fd;
   int r;
-  auto isolate = info.GetIsolate();
-  Local<Context> context = isolate->GetCurrentContext();
 
   assert(info.Length() == 2);
 
-  fd = info[0]->Int32Value(Nan::GetCurrentContext()).FromJust();
-  buf = info[1]->ToObject(context).ToLocalChecked();
+  fd = Nan::To<int32_t>(info[0]).FromJust();
+  buf = Nan::To<Object>(info[1]).ToLocalChecked();
   assert(node::Buffer::HasInstance(buf));
 
   iov.iov_base = node::Buffer::Data(buf);
@@ -353,37 +326,25 @@ NAN_METHOD(Send) {
 NAN_METHOD(Connect) {
   Nan::HandleScope scope;
   sockaddr_un s;
-  socklen_t namelen;
   int err;
   int fd;
-  unsigned int len;
-  auto isolate = info.GetIsolate();
 
   assert(info.Length() == 2);
 
-  fd = info[0]->Int32Value(Nan::GetCurrentContext()).FromJust();
-  String::Utf8Value path(isolate, info[1]);
-
-  len = path.length();
-  if (len > sizeof(s.sun_path)) {
-      err = -EINVAL;
-      goto out;
-  }
+  fd = Nan::To<int32_t>(info[0]).FromJust();
+  Nan::Utf8String path(info[1]);
 
   memset(&s, 0, sizeof(s));
-  memcpy(s.sun_path, *path, len);
+  strncpy(s.sun_path, *path, sizeof(s.sun_path) - 1);
   s.sun_family = AF_UNIX;
 
   // Replace @ for unix socket abstract namespace char '\0'
   if (s.sun_path[0] == '@') s.sun_path[0] = '\0';
 
-  namelen = offsetof(struct sockaddr_un, sun_path) + len;
-
   err = 0;
-  if (connect(fd, reinterpret_cast<sockaddr*>(&s), namelen))
+  if (connect(fd, reinterpret_cast<sockaddr*>(&s), sizeof(s)))
     err = -errno;
 
-out:
   info.GetReturnValue().Set(err);
 }
 
@@ -394,7 +355,7 @@ NAN_METHOD(Close) {
   int fd;
 
   assert(info.Length() == 1);
-  fd = info[0]->Int32Value(Nan::GetCurrentContext()).FromJust();
+  fd = Nan::To<int32_t>(info[0]).FromJust();
 
   // Suppress EINTR and EINPROGRESS.  EINTR means that the close() system call
   // was interrupted by a signal.  According to POSIX, the file descriptor is
@@ -428,14 +389,13 @@ NAN_METHOD(Close) {
 void Initialize(Local<Object> target) {
   Nan::Set(target, Nan::New("AF_UNIX").ToLocalChecked(), Nan::New(AF_UNIX));
   Nan::Set(target, Nan::New("SOCK_DGRAM").ToLocalChecked(), Nan::New(SOCK_DGRAM));
-  Nan::Export(target, "socket", Socket);
-  Nan::Export(target, "bind", Bind);
-  Nan::Export(target, "sendto", SendTo);
-  Nan::Export(target, "send", Send);
-  Nan::Export(target, "connect", Connect);
-  Nan::Export(target, "close", Close);
+  Nan::SetMethod(target, "socket", Socket);
+  Nan::SetMethod(target, "bind", Bind);
+  Nan::SetMethod(target, "sendto", SendTo);
+  Nan::SetMethod(target, "send", Send);
+  Nan::SetMethod(target, "connect", Connect);
+  Nan::SetMethod(target, "close", Close);
 }
-
 
 } // anonymous namespace
 
