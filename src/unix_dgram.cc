@@ -426,9 +426,8 @@ NAN_METHOD(Close) {
 }
 
 void Initialize(Local<Object> target) {
-  // don't need to be read-only, only used by the JS shim
-  target->Set(Nan::New("AF_UNIX").ToLocalChecked(), Nan::New(AF_UNIX));
-  target->Set(Nan::New("SOCK_DGRAM").ToLocalChecked(), Nan::New(SOCK_DGRAM));
+  Nan::Set(target, Nan::New("AF_UNIX").ToLocalChecked(), Nan::New(AF_UNIX));
+  Nan::Set(target, Nan::New("SOCK_DGRAM").ToLocalChecked(), Nan::New(SOCK_DGRAM));
   Nan::Export(target, "socket", Socket);
   Nan::Export(target, "bind", Bind);
   Nan::Export(target, "sendto", SendTo);
