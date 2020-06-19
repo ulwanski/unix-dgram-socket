@@ -429,12 +429,12 @@ void Initialize(Local<Object> target) {
   // don't need to be read-only, only used by the JS shim
   target->Set(Nan::New("AF_UNIX").ToLocalChecked(), Nan::New(AF_UNIX));
   target->Set(Nan::New("SOCK_DGRAM").ToLocalChecked(), Nan::New(SOCK_DGRAM));
-  target->Set(Nan::New("socket").ToLocalChecked(), Nan::New<FunctionTemplate>(Socket)->GetFunction());
-  target->Set(Nan::New("bind").ToLocalChecked(), Nan::New<FunctionTemplate>(Bind)->GetFunction());
-  target->Set(Nan::New("sendto").ToLocalChecked(), Nan::New<FunctionTemplate>(SendTo)->GetFunction());
-  target->Set(Nan::New("send").ToLocalChecked(), Nan::New<FunctionTemplate>(Send)->GetFunction());
-  target->Set(Nan::New("connect").ToLocalChecked(), Nan::New<FunctionTemplate>(Connect)->GetFunction());
-  target->Set(Nan::New("close").ToLocalChecked(), Nan::New<FunctionTemplate>(Close)->GetFunction());
+  Nan::Export(target, "socket", Socket);
+  Nan::Export(target, "bind", Bind);
+  Nan::Export(target, "sendto", SendTo);
+  Nan::Export(target, "send", Send);
+  Nan::Export(target, "connect", Connect);
+  Nan::Export(target, "close", Close);
 }
 
 
