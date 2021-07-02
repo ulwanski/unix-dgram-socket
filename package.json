@@ -1,6 +1,6 @@
 {
   "name": "unix-dgram-socket",
-  "version": "1.0.10",
+  "version": "1.1.0",
   "description": "Unix datagram socket with abstract namespace support for local interprocess communication.",
   "keywords": [
     "ipc",
@@ -41,7 +41,7 @@
     "node": ">=0.11.14"
   },
   "dependencies": {
-    "nan": "^2.13.1"
+    "nan": "^2.14.2"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
@@ -55,7 +55,7 @@
     "eslint-plugin-security": "^1.4.0",
     "expect": "^24.1.0",
     "mocha": "^6.0.1",
-    "node-gyp": "^3.8.0",
+    "node-gyp": "^8.1.0",
     "nyc": "^15.1.0",
     "rewire": "^4.0.1",
     "sinon": "^7.2.4",
