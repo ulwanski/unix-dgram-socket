@@ -50,7 +50,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         architecture: ${{ matrix.architecture }}
         cache: 'npm'
-    - run: npm ci
+    - run: npm ci || npm install
     - run: npm run build --if-present
     - run: npm test
     - run: npm audit
