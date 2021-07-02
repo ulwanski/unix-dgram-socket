@@ -24,10 +24,16 @@ jobs:
         architecture:
           #- x86
           - x64
-          - arm64
+          #- arm64
           #- armv6l
           #- armv7l
         include:
+          - os: ubuntu-20.04
+            node-version: 14.x
+            architecture: arm64
+          - os: ubuntu-20.04
+            node-version: 16.x
+            architecture: arm64
           - os: macos-latest
             node-version: 14.x
             architecture: x64
