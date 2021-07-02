@@ -28,12 +28,12 @@ jobs:
           #- armv6l
           #- armv7l
         include:
-          - os: ubuntu-20.04
-            node-version: 14.x
-            architecture: arm64
-          - os: ubuntu-20.04
-            node-version: 16.x
-            architecture: arm64
+#           - os: ubuntu-20.04
+#             node-version: 14.x
+#             architecture: arm64
+#           - os: ubuntu-20.04
+#             node-version: 16.x
+#             architecture: arm64
           - os: macos-latest
             node-version: 14.x
             architecture: x64
@@ -41,10 +41,10 @@ jobs:
             node-version: 16.x
             architecture: x64
 
-    name: Node ${{ matrix.node_version }} on ${{ matrix.os }} ${{ matrix.architecture }}
+    name: Node.JS ${{ matrix.node-version }} on ${{ matrix.os }} ${{ matrix.architecture }}
     steps:
     - uses: actions/checkout@v2
-    - name: Setup package using Node.JS ${{ matrix.node_version }}
+    - name: Testing using Node.JS ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
