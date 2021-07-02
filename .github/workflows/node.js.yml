@@ -11,19 +11,32 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x, 14.x, 16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        os:
+          - ubuntu-18.04
+          - ubuntu-20.04
+          - macos-latest
+          - windows-2016
+          - windows-2019
+        node-version: [6.x, 8.x, 10.x, 11.x, 12.x, 13.x, 14.x, 15.x, 16.x]
+        architecture:
+          - x64
+          - x86
+          - arm64
+          - armv6l
+          - armv7l
 
+    name: Node ${{ matrix.node_version }} on ${{ matrix.os }} ${{ matrix.architecture }}
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Setup package using Node.JS ${{ matrix.node_version }}
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
+        architecture: ${{ matrix.architecture }}
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
