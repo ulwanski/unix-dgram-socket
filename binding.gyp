@@ -5,7 +5,8 @@
       'sources': [ 'src/unix_dgram.cc' ],
       'include_dirs': [
         '<!(node -e "require(\'nan\')")'
-      ]
+      ],
+      'cflags': [ "-Wno-cast-function-type" ]
     }
   ]
 }
