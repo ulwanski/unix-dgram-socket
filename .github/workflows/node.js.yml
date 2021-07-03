@@ -27,19 +27,13 @@ jobs:
           #- arm64
           #- armv6l
           #- armv7l
-        include:
+#        include:
 #           - os: ubuntu-20.04
 #             node-version: 14.x
 #             architecture: arm64
 #           - os: ubuntu-20.04
 #             node-version: 16.x
 #             architecture: arm64
-          - os: macos-latest
-            node-version: 14.x
-            architecture: x64
-          - os: macos-latest
-            node-version: 16.x
-            architecture: x64
 
     name: Node.JS ${{ matrix.node-version }} on ${{ matrix.os }} ${{ matrix.architecture }}
     steps:
