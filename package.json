@@ -33,7 +33,7 @@
     "lint": "./node_modules/tslint/bin/tslint --format stylish --project tsconfig.json",
     "lint:code": "./node_modules/tslint/bin/tslint --format codeFrame --project tsconfig.json",
     "lint:fix": "./node_modules/tslint/bin/tslint --format stylish --project tsconfig.json --fix",
-    "package:prepare": "cp -R *.md LICENSE ChangeLog .npmignore .gitignore .eslintrc.js package.json *.gyp ./dist && mkdir -p ./dist/src && cp src/*.cc ./dist/src",
+    "package:prepare": "cp -R *.md LICENSE ChangeLog .gitignore .eslintrc.js package.json *.gyp ./dist && mkdir -p ./dist/src && cp src/*.cc ./dist/src",
     "test": "npm run test:unit",
     "test:unit": "./node_modules/.bin/_mocha -r ts-node/register test/**/*.test.ts",
     "test:unit:coverage": "./node_modules/.bin/nyc --clean --temp-dir=./coverage/.nyc_output ./node_modules/.bin/_mocha -r ts-node/register test/**/*.test.ts",
