@@ -3,13 +3,15 @@
 
 #include <nan.h>
 #include <node.h>
-#include <sys/un.h>
 #include <map>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #include <io.h>
+#include <process.h>
+#include <winsock.h>
 #else
 #include <unistd.h>
+#include <sys/un.h>
 #endif
 
 #define offset_of(type, member) ((intptr_t) ((char *) &(((type *) 8)->member) - 8))
