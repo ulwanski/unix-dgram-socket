@@ -3,17 +3,9 @@
 
 #include <nan.h>
 #include <node.h>
-#include <map>
-
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-#include <io.h>
-#include <windows.h>
-#include <process.h>
-#include <winsock.h>
-#else
 #include <unistd.h>
 #include <sys/un.h>
-#endif
+#include <map>
 
 #define offset_of(type, member) ((intptr_t) ((char *) &(((type *) 8)->member) - 8))
 #define container_of(ptr, type, member) ((type *) ((char *) (ptr) - offset_of(type, member)))
