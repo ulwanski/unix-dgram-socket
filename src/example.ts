@@ -14,7 +14,6 @@ socket.on('writable', () => {
 
 socket.on('message', (message: Buffer, info: any) => {
     console.log(message.toString(UnixDgramSocket.payloadEncoding));
-    
     console.log(info);
 });
 
