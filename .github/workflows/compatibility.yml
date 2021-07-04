@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Node.js CI
+name: Node.JS compatibility tests
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - ubuntu-18.04
+#          - ubuntu-18.04
           - ubuntu-20.04
 #          - windows-2016
 #          - windows-2019
@@ -35,7 +35,7 @@ jobs:
 #             node-version: 16.x
 #             architecture: arm64
 
-    name: Node.JS ${{ matrix.node-version }} on ${{ matrix.os }} ${{ matrix.architecture }}
+    name: Compatibility with Node ${{ matrix.node-version }} on ${{ matrix.os }} ${{ matrix.architecture }}
     steps:
     - uses: actions/checkout@v2
     - name: Testing using Node.JS ${{ matrix.node-version }}
@@ -46,4 +46,4 @@ jobs:
         cache: 'npm'
     - run: npm ci || npm install
     - run: npm run build --if-present
-    - run: npm test
+    - run: npm test:unit
