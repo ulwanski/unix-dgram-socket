@@ -1,5 +1,5 @@
 # unix-dgram-socket
-[![Node.js CI](https://github.com/ulwanski/unix-dgram-socket/actions/workflows/node.js.yml/badge.svg?branch=master)](https://github.com/ulwanski/unix-dgram-socket/actions/workflows/node.js.yml)
+[![Node compatibility](https://github.com/ulwanski/unix-dgram-socket/actions/workflows/compatibility.yml/badge.svg?branch=master)](https://github.com/ulwanski/unix-dgram-socket/actions/workflows/compatibility.yml)
 
 Connection-less, reliable unix datagram socket implementation with abstract namespace support for local interprocess communication in Node.JS application.
 UNIX domain sockets can be either unnamed, or bound to a filesystem pathname (marked as being of type socket).
