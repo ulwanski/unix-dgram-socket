@@ -19,7 +19,6 @@ function runTest(socketPath: string, testData: string) {
         });
 
         socket.on("error", error);
-
         const result = socket.send(testData, socketPath);
         expect(result).toBeTruthy();
     };
