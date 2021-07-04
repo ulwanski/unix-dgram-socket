@@ -12,7 +12,6 @@ on:
       
 jobs:
   coverage:
-    needs: [ test ]
     name: coverage
     runs-on: ubuntu-20.04
     steps:
