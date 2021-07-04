@@ -1,4 +1,4 @@
-name: build
+name: Unit tests coverage report update
 on:
   push:
     branches:
